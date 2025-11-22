@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin – NDCC</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">← Back to Site</a>
+      <span class="brand">NDCC Admin</span>
+    </div>
+  </nav>
+
+  <main class="container" id="adminMain">
+    <!-- Login panel visible by default -->
+    <section id="loginPanel">
+      <h2>Owner Login</h2>
+      <input type="password" id="adminPass" placeholder="Password" />
+      <button id="adminLoginBtn" class="btn">Login</button>
+      <p id="loginError" class="error"></p>
+    </section>
+
+    <!-- Admin content hidden until correct password -->
+    <section id="adminContent" class="hidden">
+      <h2>Manage Events</h2>
+      <form id="eventForm" class="grid">
+        <input id="evTitle" placeholder="Title" required />
+        <input id="evWhen" placeholder="When (e.g., Tue • Dec 24 • 7:00 PM)" required />
+        <input id="evWhere" placeholder="Where (e.g., Sanctuary)" required />
+        <textarea id="evDesc" placeholder="Description" required></textarea>
+        <input id="evLink" placeholder="Optional link (https://…)" type="url" />
+        <input id="evImg" placeholder="Optional image URL (https://…)" type="url" />
+        <button class="btn">Add Event</button>
+      </form>
+
+      <!-- New event bubbles appear here immediately after adding -->
+      <div id="eventAdminList" class="admin-list"></div>
+
+      <hr class="section-divider" />
+
+      <h2>Manage Carousel Photos</h2>
+      <form id="photoForm" class="grid">
+        <input id="photoUrl" placeholder="Image URL (https://…)" type="url" required />
+        <button class="btn">Add Photo</button>
+      </form>
+
+      <!-- Photo rows with Remove buttons -->
+      <div id="photoAdminList" class="admin-list"></div>
+
+      <button id="logoutBtn" class="btn outline">Log Out</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
