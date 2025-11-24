@@ -35,7 +35,8 @@ let timerId = null;     // carousel timer
  **********************/
 const qs  = s => document.querySelector(s);
 const qsa = s => Array.from(document.querySelectorAll(s));
-const isAdmin = window.location.pathname.includes("admin.html");
+// deploy-proof admin detection
+const isAdmin = !!document.getElementById("adminMain");
 
 function loadState() {
   photos = JSON.parse(localStorage.getItem(LS_PHOTOS_KEY) || "null") || defaultPhotos.slice();
@@ -267,8 +268,10 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     /******** ADMIN PAGE ********/
     const loginBtn  = qs("#adminLoginBtn");
-    const passInput = qs("#adminPass");
-    const errorMsg  = qs("#loginError");
+const passInput = qs("#adminPass");
+const errorMsg  = qs("#loginError");
+
+if (!loginBtn || !passInput || !errorMsg) return;
     const logoutBtn = qs("#logoutBtn");
 
     const eventForm = qs("#eventForm");
@@ -303,10 +306,12 @@ document.addEventListener("DOMContentLoaded", () => {
 loginBtn.addEventListener("click", tryLogin);
 
 // allow Enter key
-passInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") tryLogin();
+passInput.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    tryLogin();
+  }
 });
-
     // logout
     logoutBtn.addEventListener("click", () => {
       sessionStorage.removeItem("ndcc_admin");
