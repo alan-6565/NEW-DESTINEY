@@ -1,7 +1,7 @@
 /**********************
  * Config (demo only)
  **********************/
-const OWNER_PASSWORD = "NewDestiny1015"; // secure on backend for production
+const OWNER_PASSWORD = "NewDestiny1"; // secure on backend for production
 const LS_EVENTS_KEY = "ndcc_events";
 const LS_PHOTOS_KEY = "ndcc_photos";
 
