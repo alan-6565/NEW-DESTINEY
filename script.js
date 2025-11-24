@@ -204,6 +204,126 @@ function stopAuto() { if (timerId) clearInterval(timerId); }
 /**********************
  * LOGIN SHOW/HIDE (admin)
  **********************/
+
+/******** IMAGE UPLOAD TO GITHUB (admin only) ********/
+const dropZone = qs("#dropZone");
+const filePicker = qs("#filePicker");
+const ghTokenInput = qs("#ghToken");
+const uploadStatus = qs("#uploadStatus");
+
+// change these to match your repo
+const GH_OWNER = "alan-6565";
+const GH_REPO  = "NEW-DESTINEY";
+const GH_FOLDER = "images"; // folder in repo where pics go
+
+if (dropZone && filePicker && ghTokenInput) {
+  dropZone.addEventListener("click", () => filePicker.click());
+
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("dragover");
+  });
+
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("dragover");
+  });
+
+  dropZone.addEventListener("drop", async (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+    const file = e.dataTransfer.files?.[0];
+    if (file) await uploadImageToGitHub(file);
+  });
+
+  filePicker.addEventListener("change", async (e) => {
+    const file = e.target.files?.[0];
+    if (file) await uploadImageToGitHub(file);
+  });
+}
+
+async function uploadImageToGitHub(file) {
+  const token = (ghTokenInput.value || "").trim();
+  if (!token) {
+    uploadStatus.textContent = "❌ Please paste your GitHub token first.";
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    uploadStatus.textContent = "❌ Please choose an image file.";
+    return;
+  }
+
+  uploadStatus.textContent = "Uploading to GitHub…";
+
+  // read file -> base64
+  const base64 = await fileToBase64(file);
+  const cleanBase64 = base64.split(",")[1];
+
+  const ext = file.name.split(".").pop() || "png";
+  const safeName = file.name
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9._-]/g, "")
+    .toLowerCase();
+
+  // avoid collisions with timestamp
+  const filename = `${Date.now()}-${safeName}`;
+
+  const path = `${GH_FOLDER}/${filename}`;
+
+  const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}`;
+
+  try {
+    const res = await fetch(apiUrl, {
+      method: "PUT",
+      headers: {
+        "Authorization": `token ${token}`,
+        "Accept": "application/vnd.github+json"
+      },
+      body: JSON.stringify({
+        message: `Upload ${filename}`,
+        content: cleanBase64
+      })
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error(errText);
+      uploadStatus.textContent = "❌ Upload failed. Check token + repo name.";
+      return;
+    }
+
+    const data = await res.json();
+
+    // This is the direct image URL on GitHub raw
+    const rawUrl = data.content.download_url;
+
+    uploadStatus.textContent = `✅ Uploaded! Image URL copied & filled.`;
+
+    // Auto-fill event image field if present
+    const evImg = qs("#evImg");
+    if (evImg) evImg.value = rawUrl;
+
+    // Auto-fill carousel field if you want
+    const photoUrl = qs("#photoUrl");
+    if (photoUrl) photoUrl.value = rawUrl;
+
+    // copy to clipboard
+    navigator.clipboard?.writeText(rawUrl);
+
+  } catch (err) {
+    console.error(err);
+    uploadStatus.textContent = "❌ Upload failed (network or token).";
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 function showAdmin() {
   const loginPanel = qs("#loginPanel");
   const adminContent = qs("#adminContent");

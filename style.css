@@ -91,3 +91,19 @@ footer { background: #fff; border-top: 1px solid #00000010; padding: 1rem 0; tex
 footer .social { display: flex; justify-content: center; align-items: center; gap: .6rem; padding-bottom: .4rem; }
 footer .social a { color: var(--red-700); text-decoration: none; font-weight: 600; }
 footer .social a:hover { text-decoration: underline; }
+
+.drop-zone {
+  border: 2px dashed #00000035;
+  border-radius: 12px;
+  padding: 1.2rem;
+  background: #fff;
+  text-align: center;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+}
+.drop-zone.dragover {
+  border-color: var(--red-700);
+  background: #fff7f7;
+}
