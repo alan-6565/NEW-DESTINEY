@@ -89,15 +89,13 @@ function renderPublicEvents() {
     const card = document.createElement("article");
     card.className = "event";
 
-    // Optional image
-    const imgHTML = ev.img && isURL(ev.img)
-      ? `<img class="event-img" src="${escapeHTML(ev.img)}" alt="Event image">`
-      : "";
+    const imgHTML = ev.img
+  ? `<img class="event-img" src="${escapeHTML(ev.img)}" alt="Event image">`
+  : "";
 
-    // Optional link button
-    const linkHTML = ev.link && isURL(ev.link)
-      ? `<div class="event-actions"><a class="btn" href="${escapeHTML(ev.link)}" target="_blank" rel="noopener">Learn More</a></div>`
-      : "";
+const linkHTML = ev.link
+  ? `<div class="event-actions"><a class="btn" href="${escapeHTML(ev.link)}" target="_blank" rel="noopener">Learn More</a></div>`
+  : "";
 
     card.innerHTML = `
       ${imgHTML}
@@ -123,11 +121,13 @@ function renderAdminEventList() {
     const item = document.createElement("div");
     item.className = "admin-item";
 
-    const thumb = ev.img && isURL(ev.img) ? `<img class="admin-thumb" src="${escapeHTML(ev.img)}" alt="Event image">` : "";
+    const thumb = ev.img
+  ? `<img class="admin-thumb" src="${escapeHTML(ev.img)}" alt="Event image">`
+  : "";
 
-    const linkPart = ev.link && isURL(ev.link)
-      ? ` • <a href="${escapeHTML(ev.link)}" target="_blank" rel="noopener">Link</a>`
-      : "";
+const linkPart = ev.link
+  ? ` • <a href="${escapeHTML(ev.link)}" target="_blank" rel="noopener">Link</a>`
+  : "";
 
     item.innerHTML = `
       ${thumb}
@@ -331,10 +331,10 @@ passInput.addEventListener("keyup", (e) => {
       if (!title || !when || !where || !desc) return;
 
       const newEvent = {
-        title, when, where, desc,
-        link: isURL(link) ? link : "",
-        img:  isURL(img)  ? img  : ""
-      };
+  title, when, where, desc,
+  link: link || "",   // no validation
+  img:  img  || ""    // no validation
+};
 
       eventsData.unshift(newEvent);
       saveEvents();
