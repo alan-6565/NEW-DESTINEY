@@ -1,7 +1,7 @@
 /**********************
  * Config (demo only)
  **********************/
-const OWNER_PASSWORD = "NewDestiny1"; // secure on backend for production
+const OWNER_PASSWORD = "NewDestiny1015"; // must match what you type
 const LS_EVENTS_KEY = "ndcc_events";
 const LS_PHOTOS_KEY = "ndcc_photos";
 
@@ -286,16 +286,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sessionStorage.getItem("ndcc_admin") === "1") showAdmin();
 
     // login flow
-    loginBtn.addEventListener("click", () => {
-      const pass = (passInput.value || "").trim();
-      if (pass === OWNER_PASSWORD) {
-        sessionStorage.setItem("ndcc_admin", "1");
-        errorMsg.textContent = "";
-        showAdmin(); // reveals forms and lists
-      } else {
-        errorMsg.textContent = "Incorrect password.";
-      }
-    });
+    function tryLogin() {
+  const pass = (passInput.value || "").trim();
+
+  if (pass === OWNER_PASSWORD) {
+    sessionStorage.setItem("ndcc_admin", "1");
+    errorMsg.textContent = "";
+    showAdmin();
+  } else {
+    errorMsg.textContent = "Incorrect password.";
+  }
+
+  passInput.value = ""; // clears box after attempt
+}
+
+loginBtn.addEventListener("click", tryLogin);
+
+// allow Enter key
+passInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") tryLogin();
+});
 
     // logout
     logoutBtn.addEventListener("click", () => {
