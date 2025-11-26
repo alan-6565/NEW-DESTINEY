@@ -35,6 +35,47 @@ let timerId = null;     // carousel timer
  **********************/
 const qs  = s => document.querySelector(s);
 const qsa = s => Array.from(document.querySelectorAll(s));
+
+/**********************
+ * LIGHTBOX (click to enlarge)
+ **********************/
+function setupLightbox() {
+  const lightbox = qs("#lightbox");
+  const lightboxImg = qs("#lightboxImg");
+  const lightboxClose = qs("#lightboxClose");
+
+  if (!lightbox || !lightboxImg || !lightboxClose) return;
+
+  function openLightbox(src) {
+    lightboxImg.src = src;
+    lightbox.classList.remove("hidden");
+    lightbox.setAttribute("aria-hidden", "false");
+  }
+
+  function closeLightbox() {
+    lightbox.classList.add("hidden");
+    lightboxImg.src = "";
+    lightbox.setAttribute("aria-hidden", "true");
+  }
+
+  lightboxClose.addEventListener("click", closeLightbox);
+
+  // click background to close
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Esc key closes
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+  });
+
+  // delegate clicks for ANY image with data-lightbox
+  document.addEventListener("click", (e) => {
+    const img = e.target.closest("img[data-lightbox='true']");
+    if (img) openLightbox(img.src);
+  });
+}
 // deploy-proof admin detection
 const isAdmin = !!document.getElementById("adminMain");
 
@@ -65,9 +106,11 @@ function renderPublicCarousel() {
 
   photos.forEach((url, i) => {
     const img = document.createElement("img");
-    img.src = url;
-    img.alt = `Slide ${i + 1}`;
-    slidesEl.appendChild(img);
+img.src = url;
+img.alt = `Slide ${i + 1}`;
+img.setAttribute("data-lightbox", "true");  // ✅ makes it clickable
+img.style.cursor = "zoom-in";
+slidesEl.appendChild(img);
 
     const dot = document.createElement("button");
     dot.className = "dot";
@@ -90,7 +133,7 @@ function renderPublicEvents() {
     card.className = "event";
 
     const imgHTML = ev.img
-  ? `<img class="event-img" src="${escapeHTML(ev.img)}" alt="Event image">`
+  ? `<img class="event-img" data-lightbox="true" src="${escapeHTML(ev.img)}" alt="Event image" style="cursor:zoom-in;">`
   : "";
 
 const linkHTML = ev.link
@@ -349,6 +392,7 @@ function hideAdmin() {
 document.addEventListener("DOMContentLoaded", () => {
   // Shared state load
   loadState();
+  setupLightbox();
 
   if (!isAdmin) {
     /******** PUBLIC PAGE ********/

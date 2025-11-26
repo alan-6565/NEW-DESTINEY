@@ -1,7 +1,7 @@
 :root {
   --cream: #f9f4e8;
-  --red-700: #9f2f2f;
-  --red-500: #c85a5a;
+  --red-700: #2f5ab5;
+  --red-500: #3370cb;
   --ink: #2a2a2a;
   --muted: #6b6b6b;
   --radius: 14px;
@@ -106,4 +106,45 @@ footer .social a:hover { text-decoration: underline; }
 .drop-zone.dragover {
   border-color: var(--red-700);
   background: #fff7f7;
+}
+
+/* LIGHTBOX */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.lightbox img {
+  max-width: min(95vw, 1100px);
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  background: #fff;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 1.6rem;
+  background: #ffffff;
+  border: none;
+  border-radius: 999px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.lightbox-close:hover { opacity: 0.85; }
+
+.lightbox.hidden {
+  display: none !important;
 }
